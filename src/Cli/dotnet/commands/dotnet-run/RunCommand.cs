@@ -260,7 +260,9 @@ namespace Microsoft.DotNet.Tools.Run
                 TryGetTargetArchitecture(project.GetPropertyValue("DefaultAppHostRuntimeIdentifier"), out targetArchitecture)) &&
                 targetArchitecture == RuntimeInformation.ProcessArchitecture) || targetArchitecture == null)
             {
-                var rootVariableName = Environment.Is64BitProcess ? "DOTNET_ROOT" : "DOTNET_ROOT(x86)";
+                var rootVariableName = "DOTNET_ROOT";
+                if (OperatingSystem.IsWindows() && targetArchitecture == Architecture.X86)
+                    rootVariableName = "DOTNET_ROOT(x86)";
                 string targetFrameworkVersion = project.GetPropertyValue("TargetFrameworkVersion");
                 if (!string.IsNullOrEmpty(targetFrameworkVersion) && Version.Parse(targetFrameworkVersion.AsSpan(1)) >= Version6_0)
                 {
